@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Attendance Analyzer</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #eef2ff, #f8fafc);
+        color: #1e293b;
+    }
+    .container {
+        width: min(1000px, 94%);
+        margin: 30px auto;
+    }
+    header {
+        background: #172554;
+        color: white;
+        padding: 28px;
+        border-radius: 18px;
+        margin-bottom: 22px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+    header h1 { margin: 0 0 8px; }
+    header p { margin: 0; opacity: .9; }
+    .card {
+        background: white;
+        padding: 24px;
+        margin-bottom: 22px;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(15,23,42,.08);
+    }
+    h2 { margin-top: 0; color: #172554; }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+    input:focus {
+        outline: 2px solid #93c5fd;
+        border-color: #2563eb;
+    }
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+    }
+    button {
+        border: 0;
+        padding: 12px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        background: #2563eb;
+        color: white;
+    }
+    button:hover { opacity: .9; }
+    .secondary { background: #475569; }
+    .danger { background: #dc2626; }
+    .success { background: #16a34a; }
+    .message {
+        margin-top: 15px;
+        padding: 12px;
+        border-radius: 10px;
+        display: none;
+    }
+    .error { background: #fee2e2; color: #991b1b; }
+    .ok { background: #dcfce7; color: #166534; }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: left;
+    }
+    th { background: #eff6ff; }
+    .low { color: #b91c1c; font-weight: bold; }
+    .good { color: #15803d; font-weight: bold; }
+    .empty {
+        padding: 20px;
+        text-align: center;
+        color: #64748b;
+    }
+    .info {
+        line-height: 1.7;
+    }
+    code {
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 5px;
+    }
+    @media (max-width: 650px) {
+        .grid { grid-template-columns: 1fr; }
+        table { font-size: 13px; }
+        th, td { padding: 8px; }
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <h1>Student Attendance Analyzer</h1>
+    <p>Java project concept converted into an interactive HTML/CSS/JavaScript version</p>
+</header>
+
+<section class="card">
+    <h2>Enter Student Details</h2>
+
+    <div class="grid">
+        <div>
+            <label for="name">Student Name</label>
+            <input id="name" type="text" placeholder="Enter student name">
+        </div>
+
+        <div>
+            <label for="roll">Roll Number</label>
+            <input id="roll" type="number" placeholder="Enter roll number">
+        </div>
+
+        <div>
+            <label for="total">Total Classes</label>
+            <input id="total" type="number" min="1" placeholder="Example: 60">
+        </div>
+
+        <div>
+            <label for="attended">Classes Attended</label>
+            <input id="attended" type="number" min="0" placeholder="Example: 40">
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button onclick="addStudent()">Add Student</button>
+        <button class="success" onclick="downloadFile()">Save attendance.txt</button>
+        <button class="secondary" onclick="loadSample()">Load Sample Data</button>
+        <button class="danger" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <div id="message" class="message"></div>
+</section>
+
+<section class="card">
+    <h2>Student Records</h2>
+    <div id="records" class="empty">No student records entered.</div>
+</section>
+
+<section class="card">
+    <h2>Students Below 75%</h2>
+    <div id="lowAttendance" class="empty">
+        No records available.
+    </div>
+</section>
+
+<section class="card info">
+    <h2>Project Information</h2>
+    <p><strong>Project Title:</strong> Student Attendance File Analyzer</p>
+    <p><strong>Problem Statement:</strong> Collect student attendance details, calculate attendance percentage, store the complete information, and identify students whose attendance is below 75%.</p>
+    <p><strong>Formula:</strong> Attendance Percentage = (Classes Attended / Total Classes) × 100</p>
+
+    <h3>Concepts Used</h3>
+    <ul>
+        <li>Variables and data types</li>
+        <li>User input and validation</li>
+        <li>Arithmetic operations</li>
+        <li>Conditional statements</li>
+        <li>Arrays and objects</li>
+        <li>File-style data handling</li>
+        <li>Exception/error handling</li>
+        <li>Basic problem solving</li>
+    </ul>
+
+    <h3>Constraints</h3>
+    <ul>
+        <li>Total classes must be greater than 0.</li>
+        <li>Classes attended cannot be greater than total classes.</li>
+        <li>Attendance percentage is calculated accurately.</li>
+        <li>Invalid input is handled without terminating the page.</li>
+        <li>No database or external library is used.</li>
+    </ul>
+</section>
+
+</div>
+
+<script>
+let students = [];
+
+function showMessage(text, type) {
+    const box = document.getElementById("message");
+    box.textContent = text;
+    box.className = "message " + type;
+    box.style.display = "block";
+    setTimeout(() => box.style.display = "none", 3000);
+}
+
+function addStudent() {
+    const name = document.getElementById("name").value.trim();
+    const roll = document.getElementById("roll").value.trim();
+    const total = Number(document.getElementById("total").value);
+    const attended = Number(document.getElementById("attended").value);
+
+    if (!name || !roll || !Number.isInteger(Number(roll))) {
+        showMessage("Please enter a valid student name and roll number.", "error");
+        return;
+    }
+
+    if (!Number.isFinite(total) || total <= 0) {
+        showMessage("Total classes must be greater than 0.", "error");
+        return;
+    }
+
+    if (!Number.isFinite(attended) || attended < 0) {
+        showMessage("Classes attended cannot be negative.", "error");
+        return;
+    }
+
+    if (attended > total) {
+        showMessage("Classes attended cannot be greater than total classes.", "error");
+        return;
+    }
+
+    const percentage = (attended / total) * 100;
+
+    students.push({
+        name,
+        roll,
+        total,
+        attended,
+        percentage
+    });
+
+    renderRecords();
+
+    document.getElementById("name").value = "";
+    document.getElementById("roll").value = "";
+    document.getElementById("total").value = "";
+    document.getElementById("attended").value = "";
+
+    showMessage("Student record added successfully.", "ok");
+}
+
+function renderRecords() {
+    const records = document.getElementById("records");
+
+    if (students.length === 0) {
+        records.className = "empty";
+        records.innerHTML = "No student records entered.";
+        renderLowAttendance();
+        return;
+    }
+
+    records.className = "";
+    let html = `
+        <table>
+        <tr>
+            <th>Name</th>
+            <th>Roll Number</th>
+            <th>Total Classes</th>
+            <th>Attended</th>
+            <th>Attendance</th>
+        </tr>
+    `;
+
+    students.forEach(s => {
+        const statusClass = s.percentage < 75 ? "low" : "good";
+        html += `
+            <tr>
+                <td>${escapeHTML(s.name)}</td>
+                <td>${escapeHTML(s.roll)}</td>
+                <td>${s.total}</td>
+                <td>${s.attended}</td>
+                <td class="${statusClass}">${s.percentage.toFixed(2)}%</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+    records.innerHTML = html;
+
+    renderLowAttendance();
+}
+
+function renderLowAttendance() {
+    const box = document.getElementById("lowAttendance");
+    const low = students.filter(s => s.percentage < 75);
+
+    if (low.length === 0) {
+        box.className = "empty";
+        box.innerHTML = students.length === 0
+            ? "No records available."
+            : "No students have attendance below 75%.";
+        return;
+    }
+
+    box.className = "";
+    let html = `
+        <table>
+        <tr>
+            <th>Roll Number</th>
+            <th>Name</th>
+            <th>Attendance</th>
+        </tr>
+    `;
+
+    low.forEach(s => {
+        html += `
+            <tr>
+                <td>${escapeHTML(s.roll)}</td>
+                <td>${escapeHTML(s.name)}</td>
+                <td class="low">${s.percentage.toFixed(2)}%</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+    box.innerHTML = html;
+}
+
+function loadSample() {
+    students = [
+        { name: "Rahul", roll: "101", total: 60, attended: 52, percentage: (52/60)*100 },
+        { name: "Priya", roll: "102", total: 60, attended: 40, percentage: (40/60)*100 },
+        { name: "Arjun", roll: "103", total: 60, attended: 55, percentage: (55/60)*100 }
+    ];
+
+    renderRecords();
+    showMessage("Sample data loaded.", "ok");
+}
+
+function clearAll() {
+    students = [];
+    renderRecords();
+    showMessage("All records cleared.", "ok");
+}
+
+function downloadFile() {
+    if (students.length === 0) {
+        showMessage("Add at least one student before saving the file.", "error");
+        return;
+    }
+
+    let content = "STUDENT ATTENDANCE RECORDS\\n";
+    content += "====================================\\n";
+
+    students.forEach(s => {
+        content += `Name: ${s.name}\\n`;
+        content += `Roll Number: ${s.roll}\\n`;
+        content += `Total Classes: ${s.total}\\n`;
+        content += `Classes Attended: ${s.attended}\\n`;
+        content += `Attendance: ${s.percentage.toFixed(2)}%\\n`;
+        content += "------------------------------------\\n";
+    });
+
+    content += "\\nSTUDENTS BELOW 75%\\n";
+    content += "====================================\\n";
+
+    const low = students.filter(s => s.percentage < 75);
+
+    if (low.length === 0) {
+        content += "No students below 75%.\\n";
+    } else {
+        low.forEach(s => {
+            content += `Roll Number: ${s.roll}, Name: ${s.name}, Attendance: ${s.percentage.toFixed(2)}%\\n`;
+        });
+    }
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "attendance.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+    showMessage("attendance.txt created successfully.", "ok");
+}
+
+function escapeHTML(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+</script>
+
+</body>
+</html>
